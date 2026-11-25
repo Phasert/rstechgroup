@@ -1,6 +1,6 @@
-"use client";
+﻿"use client";
 
-import { useState } from "react";
+import { useState, useSyncExternalStore } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { Laptop, Router, Smartphone, Tv, Wifi } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -21,19 +21,31 @@ const devices = [
   { x: 470, y: 90, icon: Smartphone, before: 2, label: "Phone in kitchen" },
   { x: 100, y: 310, icon: Smartphone, before: 1, label: "Phone in bedroom" },
   { x: 330, y: 300, icon: Laptop, before: 1, label: "Laptop in office" },
-  { x: 530, y: 310, icon: Laptop, before: 0, label: "Laptop in back room" },
+  { x: 510, y: 300, icon: Laptop, before: 0, label: "Laptop in back room" },
 ];
 
 const sources = {
   before: [{ x: 40, y: 40, r: 300, kind: "router" as const }],
   after: [
     { x: 40, y: 40, r: 210, kind: "router" as const },
-    { x: 330, y: 300, r: 200, kind: "ap" as const },
-    { x: 470, y: 90, r: 190, kind: "ap" as const },
+    { x: 420, y: 245, r: 200, kind: "ap" as const },
+    { x: 380, y: 60, r: 190, kind: "ap" as const },
   ],
 };
 
+/** True on phone-width screens, where the 600-unit plan renders at about half size. */
+function useSmallScreen() {
+  return useSyncExternalStore(
+    (cb) => { const m = window.matchMedia("(max-width: 639px)"); m.addEventListener("change", cb); return () => m.removeEventListener("change", cb); },
+    () => window.matchMedia("(max-width: 639px)").matches,
+    () => false,
+  );
+}
+
 export function WifiCoverage() {
+  const small = useSmallScreen();
+  // Phones: enlarge labels and device chips so they stay legible when the plan is scaled down.
+  const k = small ? 1.55 : 1;
   const [mode, setMode] = useState<"before" | "after">("before");
   const reduce = useReducedMotion();
   const t = { duration: reduce ? 0 : 0.8, ease: [0.22, 1, 0.36, 1] as const };
@@ -42,7 +54,7 @@ export function WifiCoverage() {
   return (
     <div className="grid gap-8 lg:grid-cols-[1.4fr_1fr] lg:items-center">
       <div className="card relative overflow-hidden p-3 sm:p-5">
-        <div className="absolute left-5 top-5 z-10"><DemoBadge>Illustrative floor plan</DemoBadge></div>
+        <div className="mb-3"><DemoBadge>Illustrative floor plan</DemoBadge></div>
         <svg viewBox="0 0 600 380" className="block h-auto w-full" role="img" aria-label={mode === "before" ? "Before: one router in the corner, weak signal in the bedroom and office and none in the back room." : "After: two access points added, strong signal in every room."}>
           <defs>
             <radialGradient id="wifiHeat">
@@ -67,7 +79,7 @@ export function WifiCoverage() {
           {rooms.map((r) => (
             <g key={r.label}>
               <rect x={r.x} y={r.y} width={r.w} height={r.h} fill="none" stroke="#021d52" strokeWidth="4" />
-              <text x={r.x + 12} y={r.y + r.h - 12} fontSize="13" fill="#4a4f5a" fontFamily="var(--font-sans)">{r.label}</text>
+              <text x={r.x + 10} y={r.y + r.h - 10} fontSize={small ? 22 : 13} fontWeight={small ? 600 : 400} fill="#4a4f5a" fontFamily="var(--font-sans)">{small ? ({ "Living room": "Living", "Home office": "Office", "Back room": "Back" } as Record<string, string>)[r.label] ?? r.label : r.label}</text>
             </g>
           ))}
           {/* doorways */}
@@ -75,19 +87,21 @@ export function WifiCoverage() {
           {all.map((src, i) => {
             const on = mode === "after" || i === 0;
             return (
-              <motion.g key={`src-${i}`} initial={false} animate={{ opacity: on ? 1 : 0, scale: on ? 1 : 0.4 }} transition={t} style={{ transformOrigin: `${src.x}px ${src.y}px`, transformBox: "view-box" }}>
+              <g key={`src-${i}`} transform={`translate(${src.x} ${src.y}) scale(${k}) translate(${-src.x} ${-src.y})`}>
+              <motion.g initial={false} animate={{ opacity: on ? 1 : 0, scale: on ? 1 : 0.4 }} transition={t} style={{ transformOrigin: `${src.x}px ${src.y}px`, transformBox: "view-box" }}>
                 <circle cx={src.x} cy={src.y} r="18" fill="#021d52" />
                 <foreignObject x={src.x - 10} y={src.y - 10} width="20" height="20">
                   {src.kind === "router" ? <Router className="size-5 text-white" /> : <Wifi className="size-5 text-white" />}
                 </foreignObject>
               </motion.g>
+              </g>
             );
           })}
           {devices.map((d) => {
             const bars = mode === "after" ? 4 : d.before;
             const Icon = d.icon;
             return (
-              <g key={d.label}>
+              <g key={d.label} transform={`translate(${d.x} ${d.y}) scale(${k}) translate(${-d.x} ${-d.y})`}>
                 <rect x={d.x - 22} y={d.y - 18} width="70" height="36" rx="10" fill="white" stroke={bars === 0 ? "#d9822b" : "#e3e7ed"} />
                 <foreignObject x={d.x - 15} y={d.y - 11} width="22" height="22"><Icon className="size-5 text-navy-700" /></foreignObject>
                 {[0, 1, 2, 3].map((b) => (

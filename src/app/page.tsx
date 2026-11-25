@@ -42,7 +42,7 @@ export default async function HomePage() {
             </p>
           </RevealItem>
           <RevealItem>
-            <Link href="/about" className="inline-flex items-center gap-2 font-display font-semibold text-blue-600 hover:gap-3 transition-all">
+            <Link href="/about" className="inline-flex min-h-11 items-center gap-2 font-display font-semibold text-blue-600 hover:gap-3 transition-all">
               More about us <ArrowRight className="size-4" aria-hidden />
             </Link>
           </RevealItem>

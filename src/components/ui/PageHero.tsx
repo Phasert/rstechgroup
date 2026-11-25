@@ -1,4 +1,4 @@
-import Link from "next/link";
+﻿import Link from "next/link";
 import type { ReactNode } from "react";
 import { ChevronRight } from "lucide-react";
 
@@ -23,16 +23,16 @@ export function PageHero({
       <div className="slash-accent absolute -right-24 -top-10 -z-10 hidden h-[140%] w-72 rotate-12 bg-white/[0.04] md:block" aria-hidden />
       <div className="container-rs py-14 sm:py-20">
         {crumbs.length > 0 && (
-          <nav aria-label="Breadcrumb" className="mb-6">
+          <nav aria-label="Breadcrumb" className="mb-3">
             <ol className="flex flex-wrap items-center gap-1 text-sm text-white/60">
-              <li><Link href="/" className="hover:text-white">Home</Link></li>
+              <li><Link href="/" className="inline-flex min-h-11 items-center hover:text-white">Home</Link></li>
               {crumbs.map((c, i) => (
                 <li key={c.href} className="flex items-center gap-1">
                   <ChevronRight className="size-3.5" aria-hidden />
                   {i === crumbs.length - 1 ? (
                     <span aria-current="page" className="text-white/90">{c.label}</span>
                   ) : (
-                    <Link href={c.href} className="hover:text-white">{c.label}</Link>
+                    <Link href={c.href} className="inline-flex min-h-11 items-center hover:text-white">{c.label}</Link>
                   )}
                 </li>
               ))}

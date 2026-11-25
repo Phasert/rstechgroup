@@ -60,9 +60,10 @@ export function HealthWalkthrough() {
 
   return (
     <div ref={sceneRef}>
+      {/* The checkpoint rail is desktop-only; on phones the step buttons below carry the same progress. */}
       <div className="grid gap-6 lg:grid-cols-[280px_1fr]">
         {/* Checklist rail */}
-        <ol className="flex gap-2 overflow-x-auto lg:flex-col" aria-hidden>
+        <ol className="hidden gap-2 lg:flex lg:flex-col" aria-hidden>
           {[...checkpoints.map((c) => c.title), "Report"].map((t, i) => (
             <li key={t} className={cn("flex min-w-36 items-center gap-3 rounded-2xl p-4 ring-1 transition-colors", i === st ? "bg-navy-900 text-white ring-navy-900" : i < st ? "bg-success/10 text-navy-900 ring-success/30" : "bg-white text-ink-soft ring-line")}>
               <span className={cn("grid size-8 shrink-0 place-items-center rounded-full font-display text-sm font-bold", i === st ? "bg-blue-500" : i < st ? "bg-success text-white" : "bg-mist")}>{i < st ? "✓" : i + 1}</span>

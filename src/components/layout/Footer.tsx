@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import Image from "next/image";
 import Link from "next/link";
@@ -24,39 +24,39 @@ export function Footer() {
 
         <div>
           <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-white">Services</h2>
-          <ul className="mt-5 space-y-3 text-sm">
+          <ul className="mt-3 space-y-0 text-sm lg:mt-5 lg:space-y-3">
             {services.map((s) => (
-              <li key={s.slug}><Link className="hover:text-white" href={`/services/${s.slug}`}>{s.title}</Link></li>
+              <li key={s.slug}><Link className="inline-flex min-h-11 items-center hover:text-white lg:min-h-0" href={`/services/${s.slug}`}>{s.title}</Link></li>
             ))}
           </ul>
         </div>
 
         <div>
           <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-white">Company</h2>
-          <ul className="mt-5 space-y-3 text-sm">
+          <ul className="mt-3 space-y-0 text-sm lg:mt-5 lg:space-y-3">
             {nav.filter((n) => n.href !== "/services").map((n) => (
-              <li key={n.href}><Link className="hover:text-white" href={n.href}>{n.label}</Link></li>
+              <li key={n.href}><Link className="inline-flex min-h-11 items-center hover:text-white lg:min-h-0" href={n.href}>{n.label}</Link></li>
             ))}
-            <li><Link className="hover:text-white" href="/quote">Request a Quote</Link></li>
+            <li><Link className="inline-flex min-h-11 items-center hover:text-white lg:min-h-0" href="/quote">Request a Quote</Link></li>
           </ul>
         </div>
 
         <div>
           <h2 className="text-sm font-semibold uppercase tracking-[0.2em] text-white">Contact</h2>
-          <ul className="mt-5 space-y-4 text-sm">
-            <li><a className="flex items-center gap-3 hover:text-white" href={`tel:${site.phoneE164}`}><Phone className="size-4 text-blue-300" aria-hidden />{site.phoneDisplay}</a></li>
-            <li><a className="flex items-center gap-3 hover:text-white" href={site.whatsappUrl} target="_blank" rel="noopener noreferrer"><MessageCircle className="size-4 text-blue-300" aria-hidden />WhatsApp</a></li>
-            <li><a className="flex items-center gap-3 break-all hover:text-white" href={`mailto:${site.email}`}><Mail className="size-4 shrink-0 text-blue-300" aria-hidden />{site.email}</a></li>
-            <li className="flex items-center gap-3"><MapPin className="size-4 text-blue-300" aria-hidden />{site.location}</li>
-            <li><a className="flex items-center gap-3 hover:text-white" href={site.social.instagram} target="_blank" rel="noopener noreferrer"><Instagram className="size-4 text-blue-300" aria-hidden />@rstechgrouptt</a></li>
+          <ul className="mt-3 space-y-0 text-sm lg:mt-5 lg:space-y-4">
+            <li><a className="flex min-h-11 items-center gap-3 hover:text-white lg:min-h-0" href={`tel:${site.phoneE164}`}><Phone className="size-4 text-blue-300" aria-hidden />{site.phoneDisplay}</a></li>
+            <li><a className="flex min-h-11 items-center gap-3 hover:text-white lg:min-h-0" href={site.whatsappUrl} target="_blank" rel="noopener noreferrer"><MessageCircle className="size-4 text-blue-300" aria-hidden />WhatsApp</a></li>
+            <li><a className="flex min-h-11 items-center gap-3 break-all hover:text-white lg:min-h-0" href={`mailto:${site.email}`}><Mail className="size-4 shrink-0 text-blue-300" aria-hidden />{site.email}</a></li>
+            <li className="flex min-h-11 items-center gap-3 lg:min-h-0"><MapPin className="size-4 text-blue-300" aria-hidden />{site.location}</li>
+            <li><a className="flex min-h-11 items-center gap-3 hover:text-white lg:min-h-0" href={site.social.instagram} target="_blank" rel="noopener noreferrer"><Instagram className="size-4 text-blue-300" aria-hidden />@rstechgrouptt</a></li>
           </ul>
         </div>
       </div>
       <div className="container-rs relative flex flex-col gap-3 border-t border-white/10 py-6 text-xs sm:flex-row sm:items-center sm:justify-between">
         <p>© {new Date().getFullYear()} {site.name}. {site.tagline}</p>
         <div className="flex gap-5">
-          <Link className="hover:text-white" href="/privacy">Privacy Policy</Link>
-          <Link className="hover:text-white" href="/terms">Terms &amp; Conditions</Link>
+          <Link className="inline-flex min-h-11 items-center hover:text-white" href="/privacy">Privacy Policy</Link>
+          <Link className="inline-flex min-h-11 items-center hover:text-white" href="/terms">Terms &amp; Conditions</Link>
         </div>
       </div>
     </footer>

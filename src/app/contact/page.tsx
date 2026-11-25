@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import { Instagram, MapPin } from "lucide-react";
 import { PageHero } from "@/components/ui/PageHero";
 import { QuoteForm } from "@/components/forms/QuoteForm";
@@ -26,7 +26,7 @@ export default function ContactPage() {
         <ContactRoutes />
         <div className="mt-8 flex flex-wrap gap-x-8 gap-y-3 text-sm text-ink-soft">
           <span className="flex items-center gap-2"><MapPin className="size-4 text-blue-500" aria-hidden /> Homes and businesses across {site.location}</span>
-          <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 hover:text-blue-600"><Instagram className="size-4 text-blue-500" aria-hidden /> @rstechgrouptt</a>
+          <a href={site.social.instagram} target="_blank" rel="noopener noreferrer" className="flex min-h-11 items-center gap-2 hover:text-blue-600"><Instagram className="size-4 text-blue-500" aria-hidden /> @rstechgrouptt</a>
         </div>
       </section>
       <section id="enquiry" className="scroll-mt-24 bg-mist py-12 sm:py-16">

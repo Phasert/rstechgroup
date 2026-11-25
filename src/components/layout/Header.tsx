@@ -37,6 +37,7 @@ export function Header() {
   const isActive = (href: string) => pathname === href || pathname.startsWith(`${href}/`);
 
   return (
+    <>
     <header
       className={cn(
         "sticky top-0 z-50 transition-all duration-300",
@@ -46,7 +47,7 @@ export function Header() {
       <div className="container-rs flex h-18 items-center justify-between gap-6 py-3">
         {/* The stacked logo's small wordmark is unreadable at header height, so the RS mark is paired
             with a live-text wordmark in the logo's spaced style. */}
-        <Link href="/" className="flex shrink-0 items-center gap-3" aria-label={`${site.name} home`}>
+        <Link href="/" className="flex min-h-11 shrink-0 items-center gap-3" aria-label={`${site.name} home`}>
           <Image src="/brand/rs-mark.png" alt="" width={905} height={410} priority className="h-8 w-auto sm:h-9" />
           <span className="flex flex-col border-l border-line pl-3 leading-none" aria-hidden>
             <span className="font-display text-[13px] font-extrabold tracking-[0.22em] text-navy-700 sm:text-[15px]">TECHNOLOGY</span>
@@ -106,7 +107,10 @@ export function Header() {
           </button>
         </div>
       </div>
+    </header>
 
+      {/* Rendered outside <header>: the header's backdrop blur (applied after scrolling) would otherwise
+          become the containing block for this fixed panel and collapse it to the header's height. */}
       <AnimatePresence>
         {open && (
           <motion.div
@@ -115,7 +119,7 @@ export function Header() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -8 }}
             transition={{ duration: 0.3, ease }}
-            className="fixed inset-x-0 top-[72px] bottom-0 overflow-y-auto bg-white lg:hidden"
+            className="fixed inset-x-0 top-[72px] bottom-0 z-50 overflow-y-auto overscroll-contain bg-white lg:hidden"
           >
             <nav aria-label="Mobile" className="container-rs flex flex-col gap-1 py-6">
               {nav.map((item, i) => (
@@ -150,6 +154,6 @@ export function Header() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </>
   );
 }

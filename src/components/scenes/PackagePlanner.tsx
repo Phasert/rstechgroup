@@ -83,8 +83,11 @@ export function PackagePlanner() {
         </Group>
         {/* Phones: the preview sits below the choices, so keep a compact live summary in view. */}
         <a href="#plan-preview" className="sticky bottom-3 z-20 flex min-h-14 items-center justify-between gap-3 rounded-full bg-navy-900 px-5 text-sm font-semibold text-white shadow-[var(--shadow-lift)] lg:hidden">
-          <span aria-live="polite">{size.label} · {plan.features.length} features · {scope.label}</span>
-          <span className="text-blue-300">View plan ↓</span>
+          <span className="min-w-0 leading-tight" aria-live="polite">
+            <span className="block text-xs font-medium text-white/60">Your plan · {scope.label} scope</span>
+            <span className="block truncate">{size.label} · {plan.features.length} {plan.features.length === 1 ? "feature" : "features"}</span>
+          </span>
+          <span className="shrink-0 text-blue-300">View ↓</span>
         </a>
       </div>
 

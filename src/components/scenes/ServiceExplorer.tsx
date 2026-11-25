@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import { ArrowRight, Check, Flower2, Laptop, MapPin, Search, Wifi } from "lucide-react";
 import { ServiceIcon } from "@/components/ui/ServiceIcon";
@@ -25,6 +25,12 @@ export function ServiceExplorer() {
   const n = needs[i];
   const s = getService(n.slug)!;
   const reduce = useReducedMotion();
+  const resultRef = useRef<HTMLDivElement>(null);
+  // Below lg the result sits under the list of needs, so bring it into view after a choice.
+  const choose = (idx: number) => {
+    setI(idx);
+    if (window.innerWidth < 1024) requestAnimationFrame(() => resultRef.current?.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "nearest" }));
+  };
 
   return (
     <div className="grid gap-6 lg:grid-cols-[1fr_1.1fr]">
@@ -33,7 +39,7 @@ export function ServiceExplorer() {
         <div className="mt-4 flex flex-wrap gap-2">
           {needs.map((x, idx) => (
             <label key={x.need}>
-              <input type="radio" name="need" className="peer sr-only" checked={i === idx} onChange={() => setI(idx)} />
+              <input type="radio" name="need" className="peer sr-only" checked={i === idx} onChange={() => choose(idx)} />
               <span className="inline-flex min-h-12 cursor-pointer items-center rounded-full bg-white px-5 text-left text-[15px] font-semibold text-navy-900 ring-1 ring-line transition-colors hover:ring-blue-300 peer-checked:bg-navy-900 peer-checked:text-white peer-checked:ring-navy-900 peer-focus-visible:ring-4 peer-focus-visible:ring-blue-300">
                 {x.need}
               </span>
@@ -41,7 +47,7 @@ export function ServiceExplorer() {
           ))}
         </div>
       </fieldset>
-      <div className="overflow-hidden rounded-[var(--radius-card)] bg-navy-950 text-white ring-1 ring-white/10" aria-live="polite">
+      <div ref={resultRef} className="scroll-mb-4 overflow-hidden rounded-[var(--radius-card)] bg-navy-950 text-white ring-1 ring-white/10" aria-live="polite">
         <div className="grid-pattern-dark relative grid h-48 place-items-center overflow-hidden" aria-hidden>
           <>
             <motion.div key={n.slug} initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.05 }} transition={{ duration: reduce ? 0 : 0.35 }}>

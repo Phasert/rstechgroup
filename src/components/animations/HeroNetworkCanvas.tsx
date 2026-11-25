@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import { useEffect, useRef } from "react";
 
@@ -29,6 +29,7 @@ export function HeroNetworkCanvas({ className }: { className?: string }) {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     let w = 0, h = 0, dpr = 1, raf = 0, visible = true, start = performance.now();
     let nodes: Node[] = [];
+    let topCy = 0;
     let particles: Particle[] = [];
     const mouse = { x: 0, y: 0, tx: 0, ty: 0 };
 
@@ -42,7 +43,12 @@ export function HeroNetworkCanvas({ className }: { className?: string }) {
 
       const kinds: Kind[] = ["laptop", "ap", "phone", "desktop", "server", "desktop", "laptop", "phone", "ap", "desktop"];
       const inner = mobile ? 4 : 5, outer = mobile ? 5 : 9;
-      const R = Math.min(w, h) * (mobile ? 0.3 : 0.27);
+      // Below lg the headline sits in the lower half, so the network is kept smaller and in the top half.
+      const compact = w < 1024;
+      // The text starts at 46svh, so the whole network must fit inside the top ~44% of the screen.
+      const vh = window.innerHeight;
+      topCy = vh * 0.23;
+      const R = compact ? Math.min(w * 0.27, vh * 0.145) : Math.min(w, h) * 0.27;
       nodes = [];
       for (let i = 0; i < inner; i++) {
         const a = (i / inner) * Math.PI * 2 - Math.PI / 2;
@@ -113,7 +119,7 @@ export function HeroNetworkCanvas({ className }: { className?: string }) {
       mouse.x += (mouse.tx - mouse.x) * 0.05;
       mouse.y += (mouse.ty - mouse.y) * 0.05;
       ctx.clearRect(0, 0, w, h);
-      const cx = w * (w < 1024 ? 0.5 : 0.68), cy = h * (w < 1024 ? 0.42 : 0.5);
+      const cx = w * (w < 1024 ? 0.5 : 0.68), cy = w < 1024 ? topCy : h * 0.5;
 
       // particles
       const pIn = Math.min(1, t / 1.2);

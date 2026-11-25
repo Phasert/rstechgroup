@@ -30,9 +30,9 @@ export function SocialMakeover() {
     <div ref={sceneRef} className="grid items-center gap-10 lg:grid-cols-[auto_1fr]">
       <div className="mx-auto">
         <div className="mb-3 text-center"><DemoBadge>Fictional sample business</DemoBadge></div>
-        <div className="relative w-[290px] rounded-[2.6rem] bg-navy-900 p-3 shadow-[0_40px_80px_-30px_rgb(2_29_82/0.6)]" aria-hidden>
+        <div className="relative w-[272px] rounded-[2.6rem] bg-navy-900 p-3 sm:w-[290px] shadow-[0_40px_80px_-30px_rgb(2_29_82/0.6)]" aria-hidden>
           <div className="absolute left-1/2 top-4 z-10 h-5 w-24 -translate-x-1/2 rounded-full bg-navy-900" />
-          <div className="h-[560px] overflow-hidden rounded-[2rem] bg-white px-4 pb-4 pt-10">
+          <div className="h-[440px] overflow-hidden rounded-[2rem] bg-white px-4 pb-4 pt-10 sm:h-[560px]">
             <div className="flex items-center gap-4">
               <motion.div className="grid size-16 shrink-0 place-items-center rounded-full" initial={false} animate={{ backgroundColor: st >= 1 ? brand.coral : "#e3e7ed" }} transition={t}>
                 {st >= 1 ? (

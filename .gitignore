@@ -1,0 +1,27 @@
+node_modules/
+.next/
+out/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# secrets
+.env
+.env.local
+.env.*.local
+service-account*.json
+*-firebase-adminsdk-*.json
+
+# firebase
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+
+# local tooling and scratch output
+.claude/
+Claude outputs/
+
+.DS_Store
+Thumbs.db
+.vercel

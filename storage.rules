@@ -1,0 +1,38 @@
+rules_version = '2';
+
+// - quote-attachments/: uploaded by the server only (Admin SDK). Admins may read.
+// - portfolio/ and articles/: admins upload images; anyone may read (served on public pages).
+service firebase.storage {
+  match /b/{bucket}/o {
+
+    function isAdmin() {
+      return request.auth != null && request.auth.token.admin == true;
+    }
+
+    function isImageUnder(mb) {
+      return request.resource.size < mb * 1024 * 1024
+        && request.resource.contentType.matches('image/(png|jpeg|webp|avif)');
+    }
+
+    match /quote-attachments/{requestId}/{file} {
+      allow read: if isAdmin();
+      allow write: if false;
+    }
+
+    match /portfolio/{projectId}/{file} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isImageUnder(8);
+      allow delete: if isAdmin();
+    }
+
+    match /articles/{articleId}/{file} {
+      allow read: if true;
+      allow create, update: if isAdmin() && isImageUnder(8);
+      allow delete: if isAdmin();
+    }
+
+    match /{allPaths=**} {
+      allow read, write: if false;
+    }
+  }
+}

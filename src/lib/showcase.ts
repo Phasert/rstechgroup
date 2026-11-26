@@ -65,12 +65,28 @@ export const showcase: PortfolioProject[] = sites.map((s, i) => ({
   updatedAt: "",
 }));
 
+// Height ÷ width of each capture, so the hover scroll can move at a steady pace whatever the page length.
+const shotRatios: Record<string, { full: number; mobile: number }> = {
+  "stonebridge-construction": { full: 8879 / 1440, mobile: 16381 / 647 },
+  "fiber-electric-solutions": { full: 5342 / 1440, mobile: 14054 / 780 },
+  "azure-estates": { full: 11623 / 1440, mobile: 16376 / 443 },
+};
+
+const MS_PER_SCREEN = 2000; // hover-scroll pace: about two seconds per screenful
+/** Scroll duration for a capture shown in a frame of the given aspect (height ÷ width). */
+const scrollMs = (ratio: number, frameRatio: number) => Math.round(Math.max(4000, Math.max(0, ratio / frameRatio - 1) * MS_PER_SCREEN));
+
 /** Local screenshots captured from each showcase site (see public/portfolio/<slug>/). */
-export const shotsFor = (slug: string) => ({
-  full: `/portfolio/${slug}/desktop-full.webp`,
-  fold: `/portfolio/${slug}/desktop.webp`,
-  mobile: `/portfolio/${slug}/mobile-full.webp`,
-});
+export const shotsFor = (slug: string) => {
+  const r = shotRatios[slug] ?? { full: 6, mobile: 20 };
+  return {
+    full: `/portfolio/${slug}/desktop-full.webp`,
+    fold: `/portfolio/${slug}/desktop.webp`,
+    mobile: `/portfolio/${slug}/mobile-full.webp`,
+    fullScrollMs: scrollMs(r.full, 10 / 16),
+    mobileScrollMs: scrollMs(r.mobile, 19 / 9),
+  };
+};
 
 /** Showcase sites open the live site; Firestore projects open their case study. */
 export const isExternal = (p: PortfolioProject) => showcase.some((s) => s.id === p.id);

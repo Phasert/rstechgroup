@@ -1,11 +1,12 @@
-﻿import Image from "next/image";
+﻿import type React from "react";
+import Image from "next/image";
 import { hostOf, shotsFor } from "@/lib/showcase";
 import { cn } from "@/lib/utils";
 
 /**
  * Browser-window mockup holding a full-page screenshot captured from the live site
- * (public/portfolio/<slug>/). When the parent `.group` is hovered, the screenshot slowly
- * scrolls through the page. `phone` adds a small phone mockup with the mobile capture,
+ * (public/portfolio/<slug>/). When the parent `.group` is hovered, the screenshot scrolls
+ * through the page at a steady pace (about two seconds per screenful) and snaps back on leave. `phone` adds a small phone mockup with the mobile capture,
  * overlapping the bottom-right corner (used on the featured preview).
  */
 export function SiteShot({
@@ -44,7 +45,8 @@ export function SiteShot({
             fill
             sizes={sizes}
             priority={priority}
-            className="object-cover object-top transition-[object-position] duration-[7000ms] ease-in-out group-hover:object-bottom motion-reduce:transition-none"
+            style={{ "--scroll-ms": `${shots.fullScrollMs}ms` } as React.CSSProperties}
+            className="object-cover object-top transition-[object-position] duration-700 ease-out group-hover:object-bottom group-hover:ease-linear group-hover:[transition-duration:var(--scroll-ms)] motion-reduce:transition-none"
           />
         </div>
       </div>
@@ -60,7 +62,8 @@ export function SiteShot({
               alt=""
               fill
               sizes="160px"
-              className="object-cover object-top transition-[object-position] duration-[9000ms] ease-in-out group-hover:object-bottom motion-reduce:transition-none"
+              style={{ "--scroll-ms": `${shots.mobileScrollMs}ms` } as React.CSSProperties}
+              className="object-cover object-top transition-[object-position] duration-700 ease-out group-hover:object-bottom group-hover:ease-linear group-hover:[transition-duration:var(--scroll-ms)] motion-reduce:transition-none"
             />
             <span className="absolute left-1/2 top-1.5 h-1.5 w-10 -translate-x-1/2 rounded-full bg-navy-950" />
           </div>

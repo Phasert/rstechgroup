@@ -10,9 +10,9 @@ import type { PortfolioProject } from "@/lib/types";
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Our Work",
+  title: "Portfolio",
   description: "Case studies of networking, IT support and website projects completed by RS Technology Group in Trinidad and Tobago.",
-  alternates: { canonical: "/work" },
+  alternates: { canonical: "/portfolio" },
 };
 
 export default async function WorkPage() {
@@ -22,10 +22,10 @@ export default async function WorkPage() {
   return (
     <>
       <PageHero
-        eyebrow="Our work"
+        eyebrow="Portfolio"
         title="Case studies: the problem, the fix, the result."
         lead="Real projects, documented with photos and plain-language detail."
-        crumbs={[{ href: "/work", label: "Our Work" }]}
+        crumbs={[{ href: "/portfolio", label: "Portfolio" }]}
       />
       {lead ? (
         <section className="container-rs py-16 sm:py-24">
@@ -34,7 +34,7 @@ export default async function WorkPage() {
             <ul className="mt-12 grid gap-6 md:grid-cols-2">
               {rest.map((p) => (
                 <li key={p.id}>
-                  <Link href={`/work/${p.slug}`} className="group grid h-full grid-cols-[120px_1fr] overflow-hidden rounded-[var(--radius-card)] ring-1 ring-line sm:grid-cols-[180px_1fr]">
+                  <Link href={`/portfolio/${p.slug}`} className="group grid h-full grid-cols-[120px_1fr] overflow-hidden rounded-[var(--radius-card)] ring-1 ring-line sm:grid-cols-[180px_1fr]">
                     <div className="relative bg-mist">{p.coverImage && <Image src={p.coverImage.url} alt={p.coverImage.alt} fill sizes="180px" className="object-cover" />}</div>
                     <div className="p-5">
                       <p className="eyebrow">{p.category}</p>
@@ -56,7 +56,7 @@ export default async function WorkPage() {
 
 function FeaturedCase({ p }: { p: PortfolioProject }) {
   return (
-    <Link href={`/work/${p.slug}`} className="group grid overflow-hidden rounded-[var(--radius-section)] bg-navy-950 text-white lg:grid-cols-[1.3fr_1fr]">
+    <Link href={`/portfolio/${p.slug}`} className="group grid overflow-hidden rounded-[var(--radius-section)] bg-navy-950 text-white lg:grid-cols-[1.3fr_1fr]">
       <div className="relative aspect-[16/10] bg-navy-900 lg:aspect-auto">
         {p.coverImage && <Image src={p.coverImage.url} alt={p.coverImage.alt} fill sizes="(min-width: 1024px) 60vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />}
       </div>

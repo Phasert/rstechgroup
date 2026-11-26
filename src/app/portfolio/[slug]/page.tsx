@@ -15,7 +15,7 @@ type Params = { params: Promise<{ slug: string }> };
 export async function generateMetadata({ params }: Params): Promise<Metadata> {
   const p = await getProjectBySlug((await params).slug);
   if (!p) return { title: "Project not found" };
-  return { title: p.title, description: p.summary, alternates: { canonical: `/work/${p.slug}` } };
+  return { title: p.title, description: p.summary, alternates: { canonical: `/portfolio/${p.slug}` } };
 }
 
 export default async function CaseStudyPage({ params }: Params) {
@@ -39,7 +39,7 @@ export default async function CaseStudyPage({ params }: Params) {
         {p.coverImage && <Image src={p.coverImage.url} alt={p.coverImage.alt} fill priority sizes="100vw" className="-z-10 object-cover opacity-40" />}
         <div className="absolute inset-0 -z-10 bg-gradient-to-t from-navy-950 via-navy-950/70 to-transparent" aria-hidden />
         <div className="container-rs pb-14 pt-24 sm:pt-36">
-          <nav aria-label="Breadcrumb" className="text-sm text-white/60"><Link href="/work" className="hover:text-white">Our Work</Link> / Case study</nav>
+          <nav aria-label="Breadcrumb" className="text-sm text-white/60"><Link href="/portfolio" className="hover:text-white">Portfolio</Link> / Case study</nav>
           <h1 className="display-1 mt-6 max-w-4xl text-white">{p.title}</h1>
           <p className="mt-5 max-w-2xl text-xl text-white/80">{p.summary}</p>
           {meta.length > 0 && (

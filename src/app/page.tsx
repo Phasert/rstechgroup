@@ -1,5 +1,5 @@
 ﻿import Link from "next/link";
-import { ArrowRight, BookOpen, FolderKanban } from "lucide-react";
+import { ArrowRight, FolderKanban } from "lucide-react";
 import { Hero } from "@/components/home/Hero";
 import { ServiceCards } from "@/components/home/ServiceCards";
 import { WhyChoose } from "@/components/home/WhyChoose";
@@ -9,13 +9,13 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Reveal, RevealItem } from "@/components/ui/Reveal";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { Button } from "@/components/ui/Button";
-import { getFeaturedProjects, getLatestArticles } from "@/lib/data/public";
-import { ArticleCard, ProjectCard } from "@/components/content/ContentCards";
+import { getFeaturedProjects } from "@/lib/data/public";
+import { ProjectCard } from "@/components/content/ContentCards";
 
 export const revalidate = 300;
 
 export default async function HomePage() {
-  const [projects, articles] = await Promise.all([getFeaturedProjects(3), getLatestArticles(3)]);
+  const projects = await getFeaturedProjects(3);
 
   return (
     <>
@@ -85,8 +85,8 @@ export default async function HomePage() {
       {/* Featured projects */}
       <section className="container-rs py-20 sm:py-28">
         <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-          <SectionHeading eyebrow="Our work" title="Featured projects" />
-          {projects.length > 0 && <Button href="/work" variant="secondary">All projects</Button>}
+          <SectionHeading eyebrow="Portfolio" title="Featured projects" />
+          {projects.length > 0 && <Button href="/portfolio" variant="secondary">All projects</Button>}
         </div>
         <div className="mt-12">
           {projects.length === 0 ? (
@@ -106,30 +106,6 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Resources preview */}
-      <section className="bg-mist py-20 sm:py-28">
-        <div className="container-rs">
-          <div className="flex flex-col justify-between gap-6 sm:flex-row sm:items-end">
-            <SectionHeading eyebrow="Resources" title="Technology tips and guides" />
-            {articles.length > 0 && <Button href="/resources" variant="secondary">All resources</Button>}
-          </div>
-          <div className="mt-12">
-            {articles.length === 0 ? (
-              <EmptyState
-                icon={<BookOpen className="size-6" />}
-                title="Guides coming soon"
-                body="We'll be publishing practical advice on IT support, Wi-Fi, networking and getting your business online."
-              />
-            ) : (
-              <Reveal className="grid gap-6 md:grid-cols-3">
-                {articles.map((a) => (
-                  <RevealItem key={a.id}><ArticleCard a={a} /></RevealItem>
-                ))}
-              </Reveal>
-            )}
-          </div>
-        </div>
-      </section>
 
       <FinalCta />
     </>

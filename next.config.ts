@@ -18,6 +18,14 @@ const nextConfig: NextConfig = {
     ],
   },
   serverExternalPackages: ["firebase-admin", "nodemailer"],
+  async redirects() {
+    return [
+      { source: "/work", destination: "/portfolio", permanent: true },
+      { source: "/work/:slug", destination: "/portfolio/:slug", permanent: true },
+      { source: "/resources", destination: "/portfolio", permanent: true },
+      { source: "/resources/:slug", destination: "/portfolio", permanent: true },
+    ];
+  },
   async headers() {
     return [{ source: "/(.*)", headers: securityHeaders }];
   },

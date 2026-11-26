@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+﻿import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowUpRight, Camera, Flag, Lightbulb, Target } from "lucide-react";
@@ -27,7 +27,7 @@ export default async function WorkPage() {
       <PageHero
         eyebrow="Portfolio"
         title="Work we're proud of."
-        lead="Live websites we've built for real businesses, plus case studies from the field."
+        lead="Websites we've designed and built, from client work to concept sites, plus case studies from the field."
         crumbs={[{ href: "/portfolio", label: "Portfolio" }]}
       />
       {lead ? (
@@ -39,7 +39,7 @@ export default async function WorkPage() {
                 <h2 className="font-display text-3xl font-extrabold text-navy-900">More of our work</h2>
                 <p className="hidden text-sm text-ink-soft sm:block">Hover a preview to scroll the page</p>
               </div>
-              <Reveal className="mt-10 grid gap-x-10 gap-y-14 md:grid-cols-2">
+              <Reveal className="mt-10 grid grid-cols-1 gap-x-10 gap-y-14 md:grid-cols-2">
                 {rest.map((p) => (
                   <RevealItem key={p.id}><ProjectTile p={p} /></RevealItem>
                 ))}
@@ -57,11 +57,11 @@ export default async function WorkPage() {
 function FeaturedCase({ p }: { p: PortfolioProject }) {
   const external = isExternal(p);
   return (
-    <Link href={projectHref(p)} {...ext(p)} className="group relative isolate grid items-center gap-10 overflow-hidden rounded-[var(--radius-section)] bg-navy-950 p-6 text-white sm:p-10 lg:grid-cols-[1.35fr_1fr] lg:p-14">
+    <Link href={projectHref(p)} {...ext(p)} className="group relative isolate grid grid-cols-1 items-center gap-10 overflow-hidden rounded-[var(--radius-section)] bg-navy-950 p-6 text-white sm:p-10 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:p-14">
       <div className="absolute -right-24 -top-24 -z-10 size-96 rounded-full bg-blue-600/30 blur-3xl transition-opacity duration-700 group-hover:opacity-80" aria-hidden />
       <div className="absolute -bottom-32 left-10 -z-10 size-80 rounded-full bg-blue-400/20 blur-3xl" aria-hidden />
       {external && p.link ? (
-        <SiteShot url={p.link} title={p.title} dark />
+        <SiteShot slug={p.slug} url={p.link} title={p.title} alt={p.coverImage?.alt} sizes="(min-width: 1024px) 55vw, 100vw" dark phone priority />
       ) : (
         <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-navy-900">
           {p.coverImage && <Image src={p.coverImage.url} alt={p.coverImage.alt} fill sizes="(min-width: 1024px) 60vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />}
@@ -85,7 +85,7 @@ function ProjectTile({ p }: { p: PortfolioProject }) {
   return (
     <Link href={projectHref(p)} {...ext(p)} className="group block">
       {external && p.link ? (
-        <SiteShot url={p.link} title={p.title} />
+        <SiteShot slug={p.slug} url={p.link} title={p.title} alt={p.coverImage?.alt} sizes="(min-width: 768px) 45vw, 100vw" />
       ) : (
         <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-mist">
           {p.coverImage && <Image src={p.coverImage.url} alt={p.coverImage.alt} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />}

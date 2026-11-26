@@ -1,4 +1,4 @@
-import Image from "next/image";
+﻿import Image from "next/image";
 import Link from "next/link";
 import { FolderKanban } from "lucide-react";
 import type { PortfolioProject } from "@/lib/types";
@@ -9,7 +9,7 @@ export function ProjectCard({ p }: { p: PortfolioProject }) {
   return (
     <Link href={projectHref(p)} {...(isExternal(p) ? { target: "_blank", rel: "noopener noreferrer" } : {})} className="card group block h-full overflow-hidden">
       {isExternal(p) && p.link ? (
-        <div className="bg-mist p-4"><SiteShot url={p.link} title={p.title} className="aspect-[4/3]" /></div>
+        <div className="bg-mist p-4"><SiteShot slug={p.slug} url={p.link} title={p.title} alt={p.coverImage?.alt} className="aspect-[4/3]" sizes="(min-width: 768px) 30vw, 100vw" /></div>
       ) : (
       <div className="relative grid aspect-[4/3] place-items-center overflow-hidden bg-mist text-blue-300">
         {p.coverImage ? (

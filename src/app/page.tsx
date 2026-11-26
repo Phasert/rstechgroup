@@ -98,7 +98,7 @@ export default async function HomePage() {
               action={<Button href="/contact" variant="secondary">Talk to us</Button>}
             />
           ) : (
-            <Reveal className="grid gap-6 md:grid-cols-3">
+            <Reveal className="grid grid-cols-1 gap-6 md:grid-cols-3">
               {projects.map((p) => (
                 <RevealItem key={p.id}><ProjectCard p={p} /></RevealItem>
               ))}

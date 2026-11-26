@@ -1,11 +1,12 @@
 import Image from "next/image";
 import Link from "next/link";
 import { FolderKanban } from "lucide-react";
-import type { PortfolioProject, ResourceArticle } from "@/lib/types";
+import type { PortfolioProject } from "@/lib/types";
+import { isExternal, projectHref } from "@/lib/showcase";
 
 export function ProjectCard({ p }: { p: PortfolioProject }) {
   return (
-    <Link href={`/work/${p.slug}`} className="card group block h-full overflow-hidden">
+    <Link href={projectHref(p)} {...(isExternal(p) ? { target: "_blank", rel: "noopener noreferrer" } : {})} className="card group block h-full overflow-hidden">
       <div className="relative grid aspect-[4/3] place-items-center overflow-hidden bg-mist text-blue-300">
         {p.coverImage ? (
           <Image src={p.coverImage.url} alt={p.coverImage.alt} fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
@@ -18,17 +19,6 @@ export function ProjectCard({ p }: { p: PortfolioProject }) {
         <h3 className="mt-3 text-xl font-bold group-hover:text-blue-600">{p.title}</h3>
         <p className="mt-2 line-clamp-2 text-ink-soft">{p.summary}</p>
       </div>
-    </Link>
-  );
-}
-
-export function ArticleCard({ a }: { a: ResourceArticle }) {
-  return (
-    <Link href={`/resources/${a.slug}`} className="card group flex h-full flex-col p-7">
-      <p className="eyebrow">{a.category}</p>
-      <h3 className="mt-4 text-xl font-bold group-hover:text-blue-600">{a.title}</h3>
-      <p className="mt-3 flex-1 text-ink-soft">{a.excerpt}</p>
-      <p className="mt-6 text-sm text-ink-soft">{a.readingMinutes} min read</p>
     </Link>
   );
 }

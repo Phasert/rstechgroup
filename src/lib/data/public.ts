@@ -2,7 +2,7 @@ import "server-only";
 
 import type { Timestamp } from "firebase-admin/firestore";
 import { adminDb, isFirebaseAdminConfigured } from "@/lib/firebase/admin";
-import type { PortfolioProject, ResourceArticle } from "@/lib/types";
+import type { PortfolioProject } from "@/lib/types";
 
 // Read-only public queries. Return [] (never fake content) when Firebase is
 // not configured yet, so pages render their empty states.
@@ -65,35 +65,3 @@ export async function getProjectBySlug(slug: string): Promise<PortfolioProject |
   }
 }
 
-export async function getArticleBySlug(slug: string): Promise<ResourceArticle | null> {
-  if (!isFirebaseAdminConfigured) return null;
-  try {
-    const snap = await adminDb()
-      .collection("resourceArticles")
-      .where("status", "==", "published")
-      .where("slug", "==", slug)
-      .limit(1)
-      .get();
-    const doc = snap.docs[0];
-    return doc ? normalise<ResourceArticle>(doc.id, doc.data()) : null;
-  } catch (err) {
-    console.error("getArticleBySlug failed", err);
-    return null;
-  }
-}
-
-export async function getLatestArticles(limit = 3): Promise<ResourceArticle[]> {
-  if (!isFirebaseAdminConfigured) return [];
-  try {
-    const snap = await adminDb()
-      .collection("resourceArticles")
-      .where("status", "==", "published")
-      .orderBy("publishedAt", "desc")
-      .limit(limit)
-      .get();
-    return snap.docs.map((d) => normalise<ResourceArticle>(d.id, d.data()));
-  } catch (err) {
-    console.error("getLatestArticles failed", err);
-    return [];
-  }
-}

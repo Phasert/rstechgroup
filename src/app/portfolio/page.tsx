@@ -6,26 +6,27 @@ import { PageHero } from "@/components/ui/PageHero";
 import { Button } from "@/components/ui/Button";
 import { getPublishedProjects } from "@/lib/data/public";
 import type { PortfolioProject } from "@/lib/types";
+import { hostOf, isExternal, projectHref, showcase } from "@/lib/showcase";
 
 export const revalidate = 300;
 
 export const metadata: Metadata = {
-  title: "Our Work",
-  description: "Case studies of networking, IT support and website projects completed by RS Technology Group in Trinidad and Tobago.",
-  alternates: { canonical: "/work" },
+  title: "Portfolio",
+  description: "Websites and case studies of networking, IT support and website projects completed by RS Technology Group in Trinidad and Tobago.",
+  alternates: { canonical: "/portfolio" },
 };
 
 export default async function WorkPage() {
-  const projects = await getPublishedProjects();
+  const projects = [...showcase, ...(await getPublishedProjects())];
   const [lead, ...rest] = projects;
 
   return (
     <>
       <PageHero
-        eyebrow="Our work"
-        title="Case studies: the problem, the fix, the result."
-        lead="Real projects, documented with photos and plain-language detail."
-        crumbs={[{ href: "/work", label: "Our Work" }]}
+        eyebrow="Portfolio"
+        title="Work we're proud of."
+        lead="Live websites we've built for real businesses, plus case studies from the field."
+        crumbs={[{ href: "/portfolio", label: "Portfolio" }]}
       />
       {lead ? (
         <section className="container-rs py-16 sm:py-24">
@@ -34,8 +35,8 @@ export default async function WorkPage() {
             <ul className="mt-12 grid gap-6 md:grid-cols-2">
               {rest.map((p) => (
                 <li key={p.id}>
-                  <Link href={`/work/${p.slug}`} className="group grid h-full grid-cols-[120px_1fr] overflow-hidden rounded-[var(--radius-card)] ring-1 ring-line sm:grid-cols-[180px_1fr]">
-                    <div className="relative bg-mist">{p.coverImage && <Image src={p.coverImage.url} alt={p.coverImage.alt} fill sizes="180px" className="object-cover" />}</div>
+                  <Link href={projectHref(p)} {...ext(p)} className="group grid h-full grid-cols-[120px_1fr] overflow-hidden rounded-[var(--radius-card)] ring-1 ring-line sm:grid-cols-[180px_1fr]">
+                    <div className="relative bg-mist">{p.coverImage ? <Image src={p.coverImage.url} alt={p.coverImage.alt} fill sizes="180px" className="object-cover" /> : <SitePlaceholder p={p} small />}</div>
                     <div className="p-5">
                       <p className="eyebrow">{p.category}</p>
                       <p className="mt-2 font-display text-lg font-bold text-navy-900 group-hover:text-blue-600">{p.title}</p>
@@ -56,18 +57,33 @@ export default async function WorkPage() {
 
 function FeaturedCase({ p }: { p: PortfolioProject }) {
   return (
-    <Link href={`/work/${p.slug}`} className="group grid overflow-hidden rounded-[var(--radius-section)] bg-navy-950 text-white lg:grid-cols-[1.3fr_1fr]">
+    <Link href={projectHref(p)} {...ext(p)} className="group grid overflow-hidden rounded-[var(--radius-section)] bg-navy-950 text-white lg:grid-cols-[1.3fr_1fr]">
       <div className="relative aspect-[16/10] bg-navy-900 lg:aspect-auto">
-        {p.coverImage && <Image src={p.coverImage.url} alt={p.coverImage.alt} fill sizes="(min-width: 1024px) 60vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />}
+        {p.coverImage ? <Image src={p.coverImage.url} alt={p.coverImage.alt} fill sizes="(min-width: 1024px) 60vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" /> : <SitePlaceholder p={p} />}
       </div>
       <div className="p-8 sm:p-12">
-        <p className="eyebrow text-blue-300">Featured case study · {p.category}</p>
+        <p className="eyebrow text-blue-300">{isExternal(p) ? "Featured website" : "Featured case study"} · {p.category}</p>
         <h2 className="mt-4 text-3xl font-bold text-white">{p.title}</h2>
         <p className="mt-4 text-white/75">{p.summary}</p>
         {p.result && <p className="mt-6 border-l-2 border-blue-300 pl-4 text-white/90">{p.result}</p>}
-        <span className="mt-8 inline-flex items-center gap-2 font-display font-semibold text-blue-300">Read the case study <ArrowUpRight className="size-4" aria-hidden /></span>
+        <span className="mt-8 inline-flex items-center gap-2 font-display font-semibold text-blue-300">{isExternal(p) ? `Visit ${hostOf(p.link)}` : "Read the case study"} <ArrowUpRight className="size-4" aria-hidden /></span>
       </div>
     </Link>
+  );
+}
+
+const ext = (p: PortfolioProject) => (isExternal(p) ? { target: "_blank", rel: "noopener noreferrer" } : {});
+
+/** Browser-frame stand-in when a project has no cover image. */
+function SitePlaceholder({ p, small }: { p: PortfolioProject; small?: boolean }) {
+  return (
+    <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-navy-900 to-blue-600 p-3 text-center text-white" aria-hidden>
+      <div className={small ? "" : "rounded-2xl bg-white/10 px-6 py-5 ring-1 ring-white/20"}>
+        {!small && <div className="mb-3 flex justify-center gap-1.5"><span className="size-2 rounded-full bg-white/40" /><span className="size-2 rounded-full bg-white/40" /><span className="size-2 rounded-full bg-white/40" /></div>}
+        <p className={small ? "font-display text-sm font-bold" : "font-display text-2xl font-extrabold"}>{p.title}</p>
+        {!small && p.link && <p className="mt-1 text-sm text-white/70">{hostOf(p.link)}</p>}
+      </div>
+    </div>
   );
 }
 

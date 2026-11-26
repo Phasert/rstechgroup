@@ -3,10 +3,14 @@ import Link from "next/link";
 import { FolderKanban } from "lucide-react";
 import type { PortfolioProject } from "@/lib/types";
 import { isExternal, projectHref } from "@/lib/showcase";
+import { SiteShot } from "@/components/content/SiteShot";
 
 export function ProjectCard({ p }: { p: PortfolioProject }) {
   return (
     <Link href={projectHref(p)} {...(isExternal(p) ? { target: "_blank", rel: "noopener noreferrer" } : {})} className="card group block h-full overflow-hidden">
+      {isExternal(p) && p.link ? (
+        <div className="bg-mist p-4"><SiteShot url={p.link} title={p.title} className="aspect-[4/3]" /></div>
+      ) : (
       <div className="relative grid aspect-[4/3] place-items-center overflow-hidden bg-mist text-blue-300">
         {p.coverImage ? (
           <Image src={p.coverImage.url} alt={p.coverImage.alt} fill sizes="(min-width: 768px) 33vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />
@@ -14,6 +18,7 @@ export function ProjectCard({ p }: { p: PortfolioProject }) {
           <FolderKanban className="size-10" aria-hidden />
         )}
       </div>
+      )}
       <div className="p-6">
         <p className="eyebrow">{p.category}</p>
         <h3 className="mt-3 text-xl font-bold group-hover:text-blue-600">{p.title}</h3>

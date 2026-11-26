@@ -6,7 +6,9 @@ import { PageHero } from "@/components/ui/PageHero";
 import { Button } from "@/components/ui/Button";
 import { getPublishedProjects } from "@/lib/data/public";
 import type { PortfolioProject } from "@/lib/types";
-import { hostOf, isExternal, projectHref, showcase } from "@/lib/showcase";
+import { isExternal, projectHref, showcase } from "@/lib/showcase";
+import { SiteShot } from "@/components/content/SiteShot";
+import { Reveal, RevealItem } from "@/components/ui/Reveal";
 
 export const revalidate = 300;
 
@@ -30,22 +32,19 @@ export default async function WorkPage() {
       />
       {lead ? (
         <section className="container-rs py-16 sm:py-24">
-          <FeaturedCase p={lead} />
+          <Reveal><RevealItem><FeaturedCase p={lead} /></RevealItem></Reveal>
           {rest.length > 0 && (
-            <ul className="mt-12 grid gap-6 md:grid-cols-2">
-              {rest.map((p) => (
-                <li key={p.id}>
-                  <Link href={projectHref(p)} {...ext(p)} className="group grid h-full grid-cols-[120px_1fr] overflow-hidden rounded-[var(--radius-card)] ring-1 ring-line sm:grid-cols-[180px_1fr]">
-                    <div className="relative bg-mist">{p.coverImage ? <Image src={p.coverImage.url} alt={p.coverImage.alt} fill sizes="180px" className="object-cover" /> : <SitePlaceholder p={p} small />}</div>
-                    <div className="p-5">
-                      <p className="eyebrow">{p.category}</p>
-                      <p className="mt-2 font-display text-lg font-bold text-navy-900 group-hover:text-blue-600">{p.title}</p>
-                      <p className="mt-1 line-clamp-2 text-sm text-ink-soft">{p.summary}</p>
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <>
+              <div className="mt-20 flex items-end justify-between gap-6 border-b border-line pb-6">
+                <h2 className="font-display text-3xl font-extrabold text-navy-900">More of our work</h2>
+                <p className="hidden text-sm text-ink-soft sm:block">Hover a preview to scroll the page</p>
+              </div>
+              <Reveal className="mt-10 grid gap-x-10 gap-y-14 md:grid-cols-2">
+                {rest.map((p) => (
+                  <RevealItem key={p.id}><ProjectTile p={p} /></RevealItem>
+                ))}
+              </Reveal>
+            </>
           )}
         </section>
       ) : (
@@ -56,36 +55,55 @@ export default async function WorkPage() {
 }
 
 function FeaturedCase({ p }: { p: PortfolioProject }) {
+  const external = isExternal(p);
   return (
-    <Link href={projectHref(p)} {...ext(p)} className="group grid overflow-hidden rounded-[var(--radius-section)] bg-navy-950 text-white lg:grid-cols-[1.3fr_1fr]">
-      <div className="relative aspect-[16/10] bg-navy-900 lg:aspect-auto">
-        {p.coverImage ? <Image src={p.coverImage.url} alt={p.coverImage.alt} fill sizes="(min-width: 1024px) 60vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" /> : <SitePlaceholder p={p} />}
-      </div>
-      <div className="p-8 sm:p-12">
-        <p className="eyebrow text-blue-300">{isExternal(p) ? "Featured website" : "Featured case study"} · {p.category}</p>
-        <h2 className="mt-4 text-3xl font-bold text-white">{p.title}</h2>
-        <p className="mt-4 text-white/75">{p.summary}</p>
+    <Link href={projectHref(p)} {...ext(p)} className="group relative isolate grid items-center gap-10 overflow-hidden rounded-[var(--radius-section)] bg-navy-950 p-6 text-white sm:p-10 lg:grid-cols-[1.35fr_1fr] lg:p-14">
+      <div className="absolute -right-24 -top-24 -z-10 size-96 rounded-full bg-blue-600/30 blur-3xl transition-opacity duration-700 group-hover:opacity-80" aria-hidden />
+      <div className="absolute -bottom-32 left-10 -z-10 size-80 rounded-full bg-blue-400/20 blur-3xl" aria-hidden />
+      {external && p.link ? (
+        <SiteShot url={p.link} title={p.title} dark />
+      ) : (
+        <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-navy-900">
+          {p.coverImage && <Image src={p.coverImage.url} alt={p.coverImage.alt} fill sizes="(min-width: 1024px) 60vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />}
+        </div>
+      )}
+      <div>
+        <p className="eyebrow text-blue-300">{external ? "Featured website" : "Featured case study"}</p>
+        <h2 className="mt-4 text-4xl font-extrabold text-white sm:text-5xl">{p.title}</h2>
+        <p className="mt-5 text-lg text-white/75">{p.summary}</p>
         {p.result && <p className="mt-6 border-l-2 border-blue-300 pl-4 text-white/90">{p.result}</p>}
-        <span className="mt-8 inline-flex items-center gap-2 font-display font-semibold text-blue-300">{isExternal(p) ? `Visit ${hostOf(p.link)}` : "Read the case study"} <ArrowUpRight className="size-4" aria-hidden /></span>
+        <span className="mt-8 inline-flex min-h-11 items-center gap-2 rounded-full bg-blue-500 px-6 font-display font-semibold text-white transition-colors group-hover:bg-blue-400">
+          {external ? "Visit the live site" : "Read the case study"} <ArrowUpRight className="size-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" aria-hidden />
+        </span>
+      </div>
+    </Link>
+  );
+}
+
+function ProjectTile({ p }: { p: PortfolioProject }) {
+  const external = isExternal(p);
+  return (
+    <Link href={projectHref(p)} {...ext(p)} className="group block">
+      {external && p.link ? (
+        <SiteShot url={p.link} title={p.title} />
+      ) : (
+        <div className="relative aspect-[16/10] overflow-hidden rounded-2xl bg-mist">
+          {p.coverImage && <Image src={p.coverImage.url} alt={p.coverImage.alt} fill sizes="(min-width: 768px) 50vw, 100vw" className="object-cover transition-transform duration-700 group-hover:scale-105" />}
+        </div>
+      )}
+      <div className="mt-6 flex items-start justify-between gap-4">
+        <div>
+          <p className="eyebrow">{p.category}</p>
+          <h3 className="mt-2 font-display text-2xl font-bold text-navy-900 group-hover:text-blue-600">{p.title}</h3>
+          <p className="mt-2 text-ink-soft">{p.summary}</p>
+        </div>
+        <span className="grid size-11 shrink-0 place-items-center rounded-full ring-1 ring-line transition-colors group-hover:bg-blue-600 group-hover:text-white group-hover:ring-blue-600" aria-hidden><ArrowUpRight className="size-5" /></span>
       </div>
     </Link>
   );
 }
 
 const ext = (p: PortfolioProject) => (isExternal(p) ? { target: "_blank", rel: "noopener noreferrer" } : {});
-
-/** Browser-frame stand-in when a project has no cover image. */
-function SitePlaceholder({ p, small }: { p: PortfolioProject; small?: boolean }) {
-  return (
-    <div className="absolute inset-0 grid place-items-center bg-gradient-to-br from-navy-900 to-blue-600 p-3 text-center text-white" aria-hidden>
-      <div className={small ? "" : "rounded-2xl bg-white/10 px-6 py-5 ring-1 ring-white/20"}>
-        {!small && <div className="mb-3 flex justify-center gap-1.5"><span className="size-2 rounded-full bg-white/40" /><span className="size-2 rounded-full bg-white/40" /><span className="size-2 rounded-full bg-white/40" /></div>}
-        <p className={small ? "font-display text-sm font-bold" : "font-display text-2xl font-extrabold"}>{p.title}</p>
-        {!small && p.link && <p className="mt-1 text-sm text-white/70">{hostOf(p.link)}</p>}
-      </div>
-    </div>
-  );
-}
 
 /** Shown until real projects are published: what each case study will contain. Clearly not a project. */
 function CaseStudyPreview() {

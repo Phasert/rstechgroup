@@ -11,11 +11,12 @@ import { EmptyState } from "@/components/ui/EmptyState";
 import { Button } from "@/components/ui/Button";
 import { getFeaturedProjects } from "@/lib/data/public";
 import { ProjectCard } from "@/components/content/ContentCards";
+import { showcase } from "@/lib/showcase";
 
 export const revalidate = 300;
 
 export default async function HomePage() {
-  const projects = await getFeaturedProjects(3);
+  const projects = [...showcase, ...(await getFeaturedProjects(3))].slice(0, 3);
 
   return (
     <>
